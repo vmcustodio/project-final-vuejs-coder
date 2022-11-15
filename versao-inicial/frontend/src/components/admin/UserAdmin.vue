@@ -7,6 +7,7 @@
           <b-form-group label="Nome:" label-for="user-name">
             <b-form-input id="user-name" type="text"
               v-model="user.name" required 
+              :readonly="mode === 'remove'"
               placeholder="Informe o nome do usuário..."
             />
           </b-form-group>
@@ -15,15 +16,16 @@
           <b-form-group label="Email:" label-for="user-email">
             <b-form-input id="user-email" type="text"
               v-model="user.email" required 
+              :readonly="mode === 'remove'"
               placeholder="Informe o email do usuário..."
             />
           </b-form-group>
         </b-col>
       </b-row>
-      <b-form-checkbox id="user-admin" v-model="user.admin" class="mt-3 mb-3">
+      <b-form-checkbox id="user-admin" v-show="mode === 'save'" v-model="user.admin" class="mt-3 mb-3">
         Administrador  
       </b-form-checkbox> 
-       <b-row>
+       <b-row v-show="move === 'save'">
         <b-col md="6" sm="12">
           <b-form-group label="Senha:" label-for="user-password">
             <b-form-input id="user-password" type="password"
@@ -41,15 +43,28 @@
           </b-form-group>
         </b-col>
       </b-row>
-      <b-button variant="primary" v-if="mode === 'save'"
-        @click="save" class="mt-3">Salvar</b-button>
-      <b-button variant="danger" v-if="mode === 'remove'"
-        @click="remove">Excluir</b-button>
-       <b-button class="ml-2 mt-3"
-        @click="reset">Cancelar</b-button>
+      <b-row>
+        <b-col xs="12">
+          <b-button variant="primary" v-if="mode === 'save'"
+            @click="save" class="mt-3">Salvar</b-button>
+          <b-button variant="danger" v-if="mode === 'remove'"
+            @click="remove">Excluir</b-button>
+          <b-button class="ml-2 mt-3"
+            @click="reset">Cancelar</b-button>
+        </b-col>
+      </b-row>
     </b-form>
     <hr>
-    <b-table hover striped :item="users" :fields="fields"></b-table>
+    <b-table hover striped :item="users" :fields="fields">
+      <template slot="actions" slot-scope="data">
+        <b-button variant="warning" @click="loadUser(data.item)" class="mr-2">
+          <i class="fa fa-pencil"></i>
+        </b-button>
+        <b-button variant="danger" @click="loadUser(data.item, 'remove')" class="mr-2">
+          <i class="fa fa-trash"></i>
+        </b-button>
+      </template>
+    </b-table>
   </div>
 </template>
 
@@ -70,7 +85,7 @@ export default {
         { key: 'email', label: 'Email', sortable: true},
         { key: 'admin', label: 'Administrador', sortable: true,
           formatter: value => value ? 'Sim' : 'Não' },
-        { key: 'action', label: 'Ações'}
+        { key: 'actions', label: 'Ações'}
       ]
     }
   },
@@ -104,6 +119,10 @@ export default {
           this.reset()
        })
        .catch(showError)
+    },
+    loadUser(user, mode = 'save') {
+      this.mode = mode
+      this.user = { ...user }
     }
   },
   mounted() {
