@@ -138,7 +138,7 @@ export default {
         }
     },
     watch: {
-        page() {
+        page() { // sempre que page mudar será que carregado os artigos
             this.loadArticles()
         }
     },
