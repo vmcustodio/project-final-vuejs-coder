@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
 
   if(to.matched.some(record => record.meta.requiresAdmin)) {
     const user = JSON.parse(json)
-    user && user.admin ? next() : next({ path: '/'})
+    user && user.admin ? next() : next({ path: '/'}) // se tiver acesso ira pra proxima pagina, se nao ira voltar pra pagina home 
   } else {
     next()
   }
