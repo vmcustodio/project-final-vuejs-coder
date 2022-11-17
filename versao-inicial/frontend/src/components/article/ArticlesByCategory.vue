@@ -46,6 +46,17 @@ export default {
       })
     }
   },
+  watch: {
+    $route(to) { // quando ele mudar vai monitorar a rota q esta indo
+      this.category.id = to.params.id
+      this.articles = []
+      this.page = 1
+      this.loadMore = true
+
+      this.getCategory()
+      this.getArticles()
+    }
+  },
   mounted() {
     this.category.id = this.$route.params.id // para setar o obj completo com id
     this.getCategory() 
