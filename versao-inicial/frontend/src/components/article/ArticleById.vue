@@ -7,7 +7,7 @@
 
 <script>
 import 'highlightjs/styles/dracula.css'
-//import hljs from 'highlightjs/highlight.pack.js'
+import hljs from 'highlightjs/highlight.pack.js'
 import { baseApiUrl } from '@/global'
 import axios from 'axios'
 import PageTitle from '../templatee/PageTitle'
@@ -25,6 +25,11 @@ export default {
   mounted() {
     const url = `${baseApiUrl}/articles/${this.$route.params.id}` // passando o id do article
     axios.get(url).then(res => this.article = res.data) // qdo a resposta chegar o this.article recebr resp.dta
+  },
+  updated() {
+    document.querySelectorAll('.articles-content pre').forEach(e => {
+      hljs.highlightBlock(e)
+    })
   }
 }
 </script>

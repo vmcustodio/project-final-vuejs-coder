@@ -40,6 +40,10 @@ export default {
         name: 'articlesByCategory',
         params: { id: node.id }
       })
+
+      if(this.$mq === 'xs' || this.$mq === 'sm') { // uma vez selecionado o meunu fecha
+        this.$store.commit('toggleMenu', false)
+      }
     }
   },
   mounted() {
